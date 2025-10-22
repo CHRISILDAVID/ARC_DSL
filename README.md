@@ -4,16 +4,18 @@ This repository contains a comprehensive solution for solving ARC (Abstraction a
 
 ## 🎯 What's New
 
-**LLM-Based DSL Solver** - A Jupyter notebook that leverages open-source LLMs to intelligently search through and apply DSL transformations to solve ARC-AGI-2 tasks.
+**Training-Based DSL Solver** - A systematic program synthesis approach that learns DSL programs from training examples, plus an optional LLM-based fallback for complex tasks.
 
 ### Key Features
 
-- 🤖 **LLM Integration**: Uses open-source models (Phi-3, Mistral, Llama) to analyze tasks
+- 🎓 **Training-Based Synthesis**: Systematically searches DSL program space to learn from training examples
 - 🔧 **184 DSL Functions**: Comprehensive library of transformation primitives
 - 📊 **400 Pre-built Solvers**: Immediate solutions for 39.1% of tasks
+- 🧠 **Program Search**: Multiple strategies (simple transforms, combinations, pattern matching)
+- 🤖 **LLM Fallback** (Optional): Uses open-source models for tasks not solved by synthesis
 - 🎨 **Visual Interface**: Intuitive grid visualization with ARC color scheme
-- ⚙️ **Kaggle Ready**: Optimized for P100 GPU with configurable paths
-- 📈 **Batch Processing**: Efficiently process multiple tasks
+- ⚙️ **Kaggle Ready**: Runs on CPU, no GPU required for training approach
+- 📈 **Batch Processing**: Efficiently process all 1000 tasks
 - 🔄 **Extensible**: Framework for adding custom DSL operations
 
 ## 📁 Repository Structure
@@ -21,6 +23,9 @@ This repository contains a comprehensive solution for solving ARC (Abstraction a
 ```
 ARC_DSL/
 ├── llm_dsl_solver.ipynb       # 🌟 Main notebook (START HERE)
+├── train_dsl_model.py          # 🎓 Training script (NEW!)
+├── test_dsl_model.py           # 🧪 Testing script (NEW!)
+├── TRAINING_README.md          # Training documentation (NEW!)
 ├── QUICK_REFERENCE.md         # Fast lookup guide
 ├── KAGGLE_SETUP.md            # Step-by-step Kaggle setup
 ├── NOTEBOOK_README.md         # Detailed documentation
@@ -40,7 +45,35 @@ ARC_DSL/
 
 ## 🚀 Quick Start
 
-### Option 1: Kaggle (Recommended)
+### Option 1: Training-Based Approach (Recommended - No GPU needed!)
+
+**Command Line:**
+```bash
+# Train on all 1000 tasks (learns DSL programs)
+python3 train_dsl_model.py
+
+# Apply to evaluation data
+python3 test_dsl_model.py \
+    --trained-programs trained_programs.json \
+    --split evaluation
+```
+
+**Jupyter Notebook:**
+```bash
+# Open notebook and run training cells
+jupyter notebook llm_dsl_solver.ipynb
+# See cells under "Training-Based DSL Program Synthesis"
+```
+
+**Expected Results:**
+- Solves ~39% of tasks with 100% accuracy
+- Returns zero grids for remaining 61%
+- Fast execution (no GPU needed)
+- Deterministic results
+
+### Option 2: LLM-Based Approach (Optional - Requires GPU)
+
+For tasks not solved by training approach, you can use LLM:
 
 1. **Upload to Kaggle**:
    - Upload `llm_dsl_solver.ipynb`
@@ -58,20 +91,19 @@ ARC_DSL/
 
 **See [KAGGLE_SETUP.md](KAGGLE_SETUP.md) for detailed instructions.**
 
-### Option 2: Local
+### Option 3: Local Development
 
 1. **Install Dependencies**:
    ```bash
    pip install transformers torch accelerate matplotlib numpy jupyter
    ```
 
-2. **Configure Paths** in notebook:
-   ```python
-   DSL_MODULE_PATH = "./arc-dsl"
-   ARC_DATA_PATH = "./ARC-AGI-2-main/data"
+2. **Run Training**:
+   ```bash
+   python3 train_dsl_model.py --limit 100  # Test on 100 tasks
    ```
 
-3. **Run Notebook**:
+3. **Or use Notebook**:
    ```bash
    jupyter notebook llm_dsl_solver.ipynb
    ```
@@ -84,8 +116,9 @@ ARC_DSL/
 | Pre-built Solvers | 400 |
 | Training Tasks | 1,000 |
 | Evaluation Tasks | 120 |
-| Pre-built Coverage | 39.1% |
-| Tasks Need LLM | 609 |
+| Pre-built Coverage | ~39% |
+| Training Approach | Deterministic |
+| GPU Required | No (for training), Yes (for LLM fallback) |
 
 ## 🔧 LLM Model Options
 
@@ -97,6 +130,7 @@ ARC_DSL/
 
 ## 📖 Documentation
 
+- **[TRAINING_README.md](TRAINING_README.md)** - Training-based approach documentation (NEW!)
 - **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Fast lookup and common tasks
 - **[KAGGLE_SETUP.md](KAGGLE_SETUP.md)** - Detailed Kaggle setup instructions
 - **[NOTEBOOK_README.md](NOTEBOOK_README.md)** - Complete notebook documentation
@@ -117,6 +151,19 @@ This demonstrates:
 - Code generation and execution
 - Batch statistics
 
+Or try the training approach:
+
+```bash
+# Quick test on 10 tasks
+python3 train_dsl_model.py --limit 10
+```
+
+This demonstrates:
+- Program synthesis
+- Training validation
+- Test prediction
+- Submission generation
+
 ## ✅ Validation
 
 All components tested and validated:
@@ -128,6 +175,17 @@ python3 test_notebook_components.py
 Expected output: `✓ All tests passed! Notebook is ready to use.`
 
 ## 🎯 How It Works
+
+### Training-Based Approach (Primary)
+
+1. **Load Task**: Parse ARC task from JSON with training examples
+2. **Search Programs**: Try DSL function combinations systematically
+3. **Validate**: Test program on all training examples
+4. **Select Best**: Choose program with 100% training accuracy
+5. **Apply**: Use program on test inputs
+6. **Submit**: Generate Kaggle submission file
+
+### LLM-Based Approach (Optional Fallback)
 
 1. **Load Task**: Parse ARC task from JSON
 2. **Check Solvers**: Look for pre-built solution (39.1% coverage)
@@ -153,9 +211,20 @@ graph LR
 
 ## 📈 Expected Performance
 
+### Training-Based Approach
+- **Pre-built Solvers**: ~39% of tasks solved with 100% accuracy
+- **Simple Transforms**: Additional ~5-10% (estimated)
+- **Combined Transforms**: Additional ~2-5% (estimated)
+- **Overall**: ~45-50% of tasks with perfect accuracy
+- **Remaining**: Return zero grids (starting point for manual/LLM improvement)
+
+### LLM-Based Approach (Optional)
 - **Pre-built Solvers**: ~99% accuracy on known tasks
 - **LLM-Generated**: 10-50% accuracy (varies by task complexity)
-- **Overall**: ~50-60% on training set
+- **Combined**: ~50-60% on training set
+
+### Recommendation
+Use training-based approach first (deterministic, fast, reliable), then optionally apply LLM to unsolved tasks.
 
 ## ⏱️ Runtime (P100 GPU)
 
