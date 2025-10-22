@@ -45,6 +45,8 @@ ARC_DSL/
 
 ## 🚀 Quick Start
 
+**New to this project?** See **[QUICKSTART.md](QUICKSTART.md)** for a 5-minute guide!
+
 ### Option 1: Training-Based Approach (Recommended - No GPU needed!)
 
 **Command Line:**
