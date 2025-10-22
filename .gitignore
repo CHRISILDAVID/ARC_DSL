@@ -53,10 +53,17 @@ models/
 huggingface/
 
 # Results and submissions
-submission.json
 results/
 *.pkl
 *.h5
+
+# Test/intermediate files
+test_*.json
+trained_programs.json
+trained_programs_100.json
+submission.json
+train_submission.json
+train_validation.json
 
 # OS
 .DS_Store
